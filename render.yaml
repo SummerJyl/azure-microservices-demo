@@ -1,8 +1,9 @@
-# render.yaml — Microservices Deployment
+# render.yaml — Microservices Deployment (Node.js)
 
 services:
   - type: web
     name: product-service
+    runtime: node
     repo: https://github.com/SummerJyl/azure-microservices-demo
     branch: main
     rootDir: product-service
@@ -16,6 +17,7 @@ services:
 
   - type: web
     name: order-service
+    runtime: node
     repo: https://github.com/SummerJyl/azure-microservices-demo
     branch: main
     rootDir: order-service
@@ -29,6 +31,7 @@ services:
 
   - type: web
     name: worker
+    runtime: node
     repo: https://github.com/SummerJyl/azure-microservices-demo
     branch: main
     rootDir: worker
@@ -46,6 +49,7 @@ services:
 
   - type: web
     name: api-gateway
+    runtime: node
     repo: https://github.com/SummerJyl/azure-microservices-demo
     branch: main
     rootDir: api-gateway
