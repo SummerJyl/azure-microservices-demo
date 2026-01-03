@@ -1,0 +1,64 @@
+# render.yaml — Microservices Deployment
+
+services:
+  - type: web
+    name: product-service
+    repo: https://github.com/SummerJyl/azure-microservices-demo
+    branch: main
+    rootDir: product-service
+    buildCommand: |
+      npm install
+      npm run build
+    startCommand: node dist/index.js
+    envVars:
+      - key: NODE_ENV
+        value: production
+
+  - type: web
+    name: order-service
+    repo: https://github.com/SummerJyl/azure-microservices-demo
+    branch: main
+    rootDir: order-service
+    buildCommand: |
+      npm install
+      npm run build
+    startCommand: node dist/index.js
+    envVars:
+      - key: NODE_ENV
+        value: production
+
+  - type: web
+    name: worker
+    repo: https://github.com/SummerJyl/azure-microservices-demo
+    branch: main
+    rootDir: worker
+    buildCommand: |
+      npm install
+      npm run build
+    startCommand: node dist/index.js
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PRODUCT_SERVICE_URL
+        value: https://product-service-yourname.onrender.com
+      - key: ORDER_SERVICE_URL
+        value: https://order-service-yourname.onrender.com
+
+  - type: web
+    name: api-gateway
+    repo: https://github.com/SummerJyl/azure-microservices-demo
+    branch: main
+    rootDir: api-gateway
+    buildCommand: |
+      npm install
+      npm run build
+    startCommand: node dist/index.js
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PRODUCT_SERVICE_URL
+        value: https://product-service-yourname.onrender.com
+      - key: ORDER_SERVICE_URL
+        value: https://order-service-yourname.onrender.com
+      - key: WORKER_URL
+        value: https://worker-yourname.onrender.com
