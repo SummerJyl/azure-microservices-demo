@@ -10,6 +10,7 @@ app = FastAPI(title="Order Service", version="1.0.0")
 
 #Configuration for service communication
 PRODUCT_SERVICE_URL = os.getenv("PRODUCT_SERVICE_URL", "http://localhost:8001")
+print(f"🔍 DEBUG: PRODUCT_SERVICE_URL = {PRODUCT_SERVICE_URL}")
 
 orders_db = {}
 order_counter = 1
