@@ -4,11 +4,12 @@ from typing import List
 from datetime import datetime
 import httpx
 import uvicorn
+import os
 
 app = FastAPI(title="Order Service", version="1.0.0")
 
 #Configuration for service communication
-PRODUCT_SERVICE_URL = "http://product-service:8001"
+PRODUCT_SERVICE_URL = os.getenv("PRODUCT_SERVICE_URL", "http://localhost:8001")
 
 orders_db = {}
 order_counter = 1
