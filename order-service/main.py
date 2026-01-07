@@ -1,4 +1,5 @@
 from fastapi import FastAPI, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from typing import List
 from datetime import datetime
@@ -7,6 +8,14 @@ import uvicorn
 import os
 
 app = FastAPI(title="Order Service", version="1.0.0")
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 #Configuration for service communication
 PRODUCT_SERVICE_URL = os.getenv("PRODUCT_SERVICE_URL", "http://localhost:8001")
@@ -50,7 +59,7 @@ async def create_order(order: OrderCreate):
     
     #Step 1 & 2: Validate products and calculate total
     total = 0.0
-    async with httpx.AsyncClient() as client:
+    async with httpx.AsyncClient(verify=False) as client:
         for item in order.items:
             try:
                 # Call Product Service to get product details
@@ -95,7 +104,7 @@ async def create_order(order: OrderCreate):
 
     return new_order
 
-@app.get("/orders/[order_id}", response_model=Order)
+@app.get("/orders/{order_id}", response_model=Order)
 async def get_order(order_id: str):
     """Get order by ID"""
     if order_id not in orders_db:
@@ -107,7 +116,7 @@ async def get_orders(customer_id: str = None):
     """Get all orders, optionally filtered by customer"""
     orders = list(orders_db.values())
     if customer_id:
-        orders = [o for o in orders if o["cutomer_id"] == customer_id]
+        orders = [o for o in orders if o["customer_id"] == customer_id]
     return orders
 
 @app.patch("/orders/{order_id}/status")
@@ -117,7 +126,7 @@ async def update_order_status(order_id: str, status: str):
         raise HTTPException(status_code=404, detail="Order not found")
 
     valid_statuses = ["pending", "confirmed", "shipped", "delivered", "canceled"]
-    if status not in valiid_statuses:
+    if status not in valid_statuses:
         raise HTTPException(
             status_code=400,
             detail=f"Invalid status. Must be one of {valid_statuses}"
